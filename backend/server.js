@@ -7,6 +7,8 @@ const app = express();
 
 app.use(express.json());
 
+app.use(express.json());
+
 // CORS
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -55,12 +57,6 @@ app.get("/users", async (req, res) => {
 app.post("/users", async (req, res) => {
   const { name, leetcode, codeforces } = req.body;
 
-  if (!name || !leetcode || !codeforces) {
-    return res.status(400).json({
-      error: "name, leetcode and codeforces are required",
-    });
-  }
-
   const { data, error } = await supabase
     .from("users")
     .insert([
@@ -68,15 +64,15 @@ app.post("/users", async (req, res) => {
         name,
         leetcode,
         codeforces,
+        streak: 0,
       },
-    ])
-    .select();
+    ]);
 
   if (error) {
     return res.status(500).json(error);
   }
 
-  res.status(201).json(data);
+  res.json(data);
 });
 
 // DELETE USER
