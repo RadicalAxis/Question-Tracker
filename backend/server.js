@@ -36,13 +36,16 @@ app.get("/health", (_req, res) => {
 // ==========================
 
 // GET ALL USERS
-app.get("/users", async (_req, res) => {
+app.get("/users", async (req, res) => {
   const { data, error } = await supabase
     .from("users")
     .select("*");
 
+  console.log("SUPABASE DATA:", data);
+  console.log("SUPABASE ERROR:", error);
+
   if (error) {
-    return res.status(500).json(error);
+    return res.status(500).json({ error });
   }
 
   res.json(data);
